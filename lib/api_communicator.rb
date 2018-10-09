@@ -5,16 +5,22 @@ require 'pry'
 LINK_TO_STAR_WARS_API = 'http://www.swapi.co/api/people/'
 
 def get_char_url_array(hash, character)
-  hash["results"].each do |character_hash|
-    if character_hash["name"].downcase == character.downcase
-      films_hash = character_hash["films"]
-      return films_hash
+
+  # get_char_url_array automatically downcases what user enters as character and
+  # compares it to downcased character hash
+  films_hash = {}
+  while films_hash == {}
+    hash["results"].each do |character_hash|
+      if character_hash["name"].downcase == character.downcase
+        films_hash = character_hash["films"]
+        return films_hash
+      end
+    end
+    if films_hash == {}
+      character = invalid_entry
     end
   end
-
-  if films_hash.nil?
-    character = get_character_from_user
-  end
+  binding.pry
 end
 
 def api_caller(url)
