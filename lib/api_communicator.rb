@@ -14,7 +14,7 @@ def get_character_movies_from_api(character)
   response_hash.select do |x,y| # iterates through each portion of the initial hash to get to character data#
     if x == "results"
       y.each do |character_data|
-        if character_data["name"].downcase == character
+        if character_data["name"].downcase.include?(character)
           return character_data["films"]
         end
       end
