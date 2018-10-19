@@ -30,6 +30,12 @@ def parse_character_movies(character)
       film_resp_string = RestClient.get(film_name)
       JSON.parse(film_resp_string)
     end 
+  response_hash["results"].each do |hash|
+    if character == hash["name"]
+      desired_films = hash["films"]
+  end
+end
+  desired_films
 end
 
 
@@ -38,6 +44,13 @@ def print_movies(character)
   # some iteration magic and puts out the movies in a nice list
       "Movie Title: #{hash_element["title"]}"
     end 
+  array_of_film_hashes = films_hash.collect do |film_name|
+     film_resp_string = RestClient.get(film_name)
+     JSON.parse(film_resp_string)
+   end
+  array_of_film_hashes.collect do |hash_element|
+    "Movie Title: #{hash_element["title"]}"
+    end
 end
 
 
