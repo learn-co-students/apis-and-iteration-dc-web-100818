@@ -7,12 +7,16 @@ def get_character_movies_from_api(character)
   response_string = RestClient.get('http://www.swapi.co/api/people/')
   response_hash = JSON.parse(response_string)
   
-  # NOTE: in this demonstration we name many of the variables _hash or _array. 
-  # This is done for educational purposes. This is not typically done in code.
+  desired_films = []
 
+  response_hash["results"].each do |hash|
+    if character == hash["name"]
+      desired_films = hash["films"]
+    end 
+  end 
+    desired_films 
+end
 
-  # iterate over the response hash to find the collection of `films` for the given
-  #   `character`
   # collect those film API urls, make a web request to each URL to get the info
   #  for that film
   # return value of this method should be collection of info about each film.
@@ -20,18 +24,32 @@ def get_character_movies_from_api(character)
   # this collection will be the argument given to `parse_character_movies`
   #  and that method will do some nice presentation stuff: puts out a list
   #  of movies by title. play around with puts out other info about a given film.
+
+def parse_character_movies(character)
+    get_character_movies_from_api(character).collect do |film_name|
+      film_resp_string = RestClient.get(film_name)
+      JSON.parse(film_resp_string)
+    end 
 end
 
-def print_movies(films_hash)
+
+def print_movies(character)
+  parse_character_movies(character).collect do |hash_element|
   # some iteration magic and puts out the movies in a nice list
+      "Movie Title: #{hash_element["title"]}"
+    end 
 end
+
 
 def show_character_movies(character)
   films_array = get_character_movies_from_api(character)
-  print_movies(films_array)
+  print_movies(character)
+        
 end
+binding.pry
+0
 
-## BONUS
+# BONUS
 
 # that `get_character_movies_from_api` method is probably pretty long. Does it do more than one job?
 # can you split it up into helper methods?
